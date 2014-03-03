@@ -10,7 +10,7 @@ import logging
 #import requests
 from subprocess import call
 import json
-from lib import DeadboltHandler, DoorHandler
+from bbb_node_lib import DeadboltHandler, DoorHandler, post_to_api
 
 baseurl = os.environ['BASEURL']
 requests_timeout = 10
@@ -28,7 +28,11 @@ if __name__ == '__main__':
     logfile = logging.FileHandler('refactor.log')
     logfile.setLevel(logging.DEBUG)
     log.addHandler(logfile)
-    log.debug('%s, PROGRAM START' % now)
+    log.debug('%s, SYSTEM, NODE A START' % now)
+
+    data = {'SYSTEM': 'NODE A START'}
+    post_to_api(log, data)
+
     # GPIO setup.
     GPIO.setup(deadbolt_gpio_pin, GPIO.IN)
     GPIO.setup(back_door_gpio_pin, GPIO.IN)
