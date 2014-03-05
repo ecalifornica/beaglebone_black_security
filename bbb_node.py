@@ -10,7 +10,7 @@ import logging
 #import requests
 from subprocess import call
 import json
-from bbb_node_lib import DeadboltHandler, DoorHandler, post_to_api
+from bbb_node_lib import DeadboltHandler, DoorHandler, MotionHandler, post_to_api
 
 baseurl = os.environ['BASEURL']
 requests_timeout = 10
@@ -40,6 +40,7 @@ if __name__ == '__main__':
 
     deadbolt_handler = DeadboltHandler('BACK DOOR')
     back_door_handler = DoorHandler('BACK DOOR')
+    kitchen_motion_handler = MotionHandler('KITCHEN')
 
     while True:
         '''
@@ -48,6 +49,7 @@ if __name__ == '__main__':
         '''
         deadbolt_handler.record(GPIO.input(deadbolt_gpio_pin), log)
         back_door_handler.record(GPIO.input(back_door_gpio_pin), log)
+        kitchen_motion_handler.record(GPIO.input(kitchen_PIR_gpio_pin), log)
         # Threaded video capture
 
         time.sleep(.1)

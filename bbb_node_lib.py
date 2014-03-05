@@ -58,4 +58,24 @@ class DeadboltHandler(object):
                 post_to_api(log, data)
             self.locked = locked
 
+class MotionHandler(object):
+    '''PIR motion sensor.'''
+    def __init__(self, location):
+        self.location = location
+        self.motion_detected = None
+        self.motion_end_time = time.time()
 
+    def record(self, motion_detected, log):
+        # The PIR sensor cuts the circuit on motion, tamperproof.
+        motion_detected = not motion_detected
+        if motion_detected != self.motion_detected:
+            sensor_state = 'MOTION DETECTED' if motion_detected else 'MOTION END'
+            log_sensor_event(self, log, sensor_state)
+            delta = time.time() - self.motion_end_time
+            # Reduce log clutter.
+            if delta > 30 and motion_detected:
+                data = {self.location: sensor_state}
+                post_to_api(log, data)
+            if not motion_detected:
+                self.motion_end_time = time.time()
+            self.motion_detected = motion_detected
