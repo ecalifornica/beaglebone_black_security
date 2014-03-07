@@ -34,6 +34,14 @@ def sensor_input():
             json.dump(json_data, json_file)
         return jsonify(json_data)
 
+@app.route('/ajax/')
+def ajax():
+    try:
+        with open('sensors.json', 'r') as json_file:
+            json_data = json.load(json_file)
+    except:
+        json_data = {'no data': 'lol'}
+    return jsonify(json_data)
 
 @app.route('/', methods=['GET'])
 def user_interface():
