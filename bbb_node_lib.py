@@ -58,6 +58,7 @@ class DeadboltHandler(object):
                 post_to_api(log, data)
             self.locked = locked
 
+
 class MotionHandler(object):
     '''PIR motion sensor.'''
     def __init__(self, location):
@@ -72,7 +73,6 @@ class MotionHandler(object):
             sensor_state = 'MOTION DETECTED' if motion_detected else 'MOTION END'
             log_sensor_event(self, log, sensor_state)
             delta = time.time() - self.motion_end_time
-            # Reduce log clutter.
             if delta > 30 and motion_detected:
                 data = {self.location: sensor_state}
                 post_to_api(log, data)
