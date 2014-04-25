@@ -39,8 +39,8 @@ if __name__ == '__main__':
     GPIO.setup(kitchen_PIR_gpio_pin, GPIO.IN)
 
     deadbolt_handler = DeadboltHandler('BACKDOORDEADBOLT')
-    back_door_handler = DoorHandler('BACK DOOR')
-    kitchen_motion_handler = MotionHandler('KITCHEN')
+    back_door_handler = DoorHandler('BACKDOOR')
+    kitchen_motion_handler = MotionHandler('KITCHENMOTION')
 
     while True:
         '''

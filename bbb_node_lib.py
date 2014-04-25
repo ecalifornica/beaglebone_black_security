@@ -59,6 +59,9 @@ class DeadboltHandler(object):
             self.locked = locked
 
 
+#
+from subprocess import call
+
 class MotionHandler(object):
     '''PIR motion sensor.'''
     def __init__(self, location):
@@ -70,7 +73,15 @@ class MotionHandler(object):
         # The PIR sensor cuts the circuit on motion, tamperproof.
         motion_detected = not motion_detected
         if motion_detected != self.motion_detected:
+            '''
+            barf = int(time.time())
+            call('/home/ecal/projects/boneCV/capture -F -c 3000 -o > /media/usb/video_output/%s.raw' % barf, shell=True)
+            call('ffmpeg -f h264 -i /home/ecal/projects/video_output/%s.raw -vcodec copy /home/ecal/projects//video_output/%s.mp4' % barf, shell=True)
+            call('scp -i /home/ecal/.ssh/no_pass /home/ecal/projects/video_output/%s.mp4 ecalifornica@blametommy.com:/var/www/ecal/blametommy.com/public/video_output' % barf, shell=True)
+            '''
+            
             sensor_state = 'MOTION DETECTED' if motion_detected else 'MOTION END'
+            # Incorrect.
             log_sensor_event(self, log, sensor_state)
             delta = time.time() - self.motion_end_time
             if delta > 30 and motion_detected:
