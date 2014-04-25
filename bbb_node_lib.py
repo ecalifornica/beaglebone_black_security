@@ -1,4 +1,3 @@
-import logging
 import requests
 import time
 import os
@@ -11,7 +10,8 @@ baseurl = os.environ['BASEURL']
 def post_to_api(log, data):
     with requests.Session() as session:
         try:
-            request = session.post(baseurl, data=json.dumps(data), timeout=requests_timeout)
+            request = session.post(baseurl, data=json.dumps(data),
+                                   timeout=requests_timeout)
             returned_json = request.json
             print(returned_json)
             return returned_json
@@ -21,7 +21,8 @@ def post_to_api(log, data):
 
 def log_sensor_event(self, log, sensor_state):
     now = time.localtime()
-    event_data = '%s, %s, %s' % (time.strftime('%Y-%m-%d, %H:%M:%S', now), self.location, sensor_state)
+    event_data = '%s, %s, %s' % (time.strftime('%Y-%m-%d, %H:%M:%S', now),
+                                 self.location, sensor_state)
     log.debug(event_data)
 
 
@@ -36,7 +37,7 @@ class DoorHandler(object):
             sensor_state = 'CLOSED' if closed else 'OPEN'
             log_sensor_event(self, log, sensor_state)
             data = {self.location: sensor_state}
-            if self.closed != None:
+            if self.closed is not None:
                 post_to_api(log, data)
             self.closed = closed
 
@@ -53,14 +54,11 @@ class DeadboltHandler(object):
             sensor_state = 'LOCKED' if locked else 'UNLOCKED'
             log_sensor_event(self, log, sensor_state)
             data = {self.location: sensor_state}
-            if self.locked != None:
-                #kitchen_video_handler.video_armed = True
+            if self.locked is not None:
+                # kitchen_video_handler.video_armed = True
                 post_to_api(log, data)
             self.locked = locked
 
-
-#
-from subprocess import call
 
 class MotionHandler(object):
     '''PIR motion sensor.'''
@@ -73,14 +71,8 @@ class MotionHandler(object):
         # The PIR sensor cuts the circuit on motion, tamperproof.
         motion_detected = not motion_detected
         if motion_detected != self.motion_detected:
-            '''
-            barf = int(time.time())
-            call('/home/ecal/projects/boneCV/capture -F -c 3000 -o > /media/usb/video_output/%s.raw' % barf, shell=True)
-            call('ffmpeg -f h264 -i /home/ecal/projects/video_output/%s.raw -vcodec copy /home/ecal/projects//video_output/%s.mp4' % barf, shell=True)
-            call('scp -i /home/ecal/.ssh/no_pass /home/ecal/projects/video_output/%s.mp4 ecalifornica@blametommy.com:/var/www/ecal/blametommy.com/public/video_output' % barf, shell=True)
-            '''
-            
-            sensor_state = 'MOTION DETECTED' if motion_detected else 'MOTION END'
+            sensor_state = 'MOTION DETECTED' if motion_detected\
+                else 'MOTION END'
             # Incorrect.
             log_sensor_event(self, log, sensor_state)
             delta = time.time() - self.motion_end_time

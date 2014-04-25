@@ -1,16 +1,11 @@
-'''
-Refactored BBB node.
-'''
+# Refactored BBB node.
 
 import os
 import Adafruit_BBIO.GPIO as GPIO
-import Adafruit_BBIO.PWM as PWM
 import time
 import logging
-#import requests
-from subprocess import call
-import json
-from bbb_node_lib import DeadboltHandler, DoorHandler, MotionHandler, post_to_api
+from bbb_node_lib import (DeadboltHandler, DoorHandler, MotionHandler,
+                          post_to_api)
 
 baseurl = os.environ['BASEURL']
 requests_timeout = 10
@@ -29,28 +24,18 @@ if __name__ == '__main__':
     logfile.setLevel(logging.DEBUG)
     log.addHandler(logfile)
     log.debug('%s, SYSTEM, NODE A START' % now)
-
     data = {'SYSTEM': 'NODE A START'}
     post_to_api(log, data)
-
     # GPIO setup.
     GPIO.setup(deadbolt_gpio_pin, GPIO.IN)
     GPIO.setup(back_door_gpio_pin, GPIO.IN)
     GPIO.setup(kitchen_PIR_gpio_pin, GPIO.IN)
-
     deadbolt_handler = DeadboltHandler('BACKDOORDEADBOLT')
     back_door_handler = DoorHandler('BACKDOOR')
     kitchen_motion_handler = MotionHandler('KITCHENMOTION')
-
     while True:
-        '''
-        with open('node_config.json', 'r') as node_config_file:
-            node_config = json.load(node_config_file)
-        '''
         deadbolt_handler.record(GPIO.input(deadbolt_gpio_pin), log)
         back_door_handler.record(GPIO.input(back_door_gpio_pin), log)
         kitchen_motion_handler.record(GPIO.input(kitchen_PIR_gpio_pin), log)
         # Threaded video capture
-
         time.sleep(.1)
-        
