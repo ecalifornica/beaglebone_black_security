@@ -5,6 +5,7 @@ Flask API.
 
 **BBB node**
 A loop that requests urls on sensor events.
+![BBB camera node](http://robertqueenin.com/bbb_node.jpg)
 
 **Parts List**
 * $45 Beaglebone Black: http://www.adafruit.com/products/1278
